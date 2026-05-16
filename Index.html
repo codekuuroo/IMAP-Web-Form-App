@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+    <div class="main">
+        <h2>PHILIPPINE CHARITY SWEEPSTAKES OFFICE</h2>
+
+        <h3>INDIVIDUAL MEDICAL ASSISTANCE PROGRAM (IMAP)</h3>
+        <form>
+            <label for="Pname">FULL NAME OF PATIENT:</label><br>
+            <input type="text" id="Pname" /><br>
+
+            <label for="Addr">ADDRESS:</label><br>
+            <input type="text" id="Addr" required /><br>
+
+            <label for="CivStats">Civil Status:</label><br>
+            <select id="CivStats" name="CivStats" required>
+                <option value="" hidden>
+                    Select an option...
+                </option>
+                <option value="single">
+                    Single
+                </option>
+                <option value="married">
+                    Married
+                </option>
+                <option value="widow">
+                    Widow(er)
+                </option>
+                <option value="separated">
+                    Separated
+                </option>
+                <option value="partner">
+                    Common-Law Partner
+                </option>
+            </select><br>
+            
+            <label for="Bdate">Birth Date</label><br>
+            <input type="date" id="Bdate" required><br>
+
+            <label>Sex</label><br>
+            <input type="radio" id="male" name="sex" value="male" required>
+            <label for="male">Male</label>
+            <input type="radio" id="female" name="sex" value="female">
+            <label for="female">Female</label><br>
+
+            <label for="religion">Religion:</label><br>
+            <input type="text" id="religion" required><br>
+
+            <label for="education">Educational Attainment:</label><br>
+            <select id="education" name="education" required>
+                <option value="" hidden>
+                    Select an option...
+                </option>
+                <option value="none">
+                    None
+                </option>
+                <option value="elem">
+                    Elementary
+                </option>
+                <option value="hs">
+                    High School
+                </option>
+                <option value="college">
+                    College
+                </option>
+                <option value="pgrad">
+                    Post-Graduate
+                </option>
+                <option value="vocation">
+                    Vocational
+                </option>
+            </select><br>
+
+            <label for="job">Job:</label><br>
+            <input type="text" id="job" required><br>
+
+            <label for="salary">Salary:</label><br>
+            <input type="number"  id="salary" required>
+        </form>
+    </div>
+
+    <script src="main.js"></script>
+</body>
+</html>
