@@ -1,12 +1,18 @@
-document.addEventListener('DOMContentLoaded', () => {
-  const reasonSelect = document.getElementById('CivStats');
-  const otherInputContainer = document.getElementById('otherContainer');
+function addMember() {
+    const container = document.getElementById('members-container');
+    
+    const newEntry = document.createElement('div');
+    newEntry.className = 'member-entry';
+    
+    newEntry.innerHTML = `
+        <input type="text" name="memberName" placeholder="relative Name" required>
+        <input type="text" name="memberAge" placeholder="Age">
+        <button type="button" class="remove-btn" onclick="removeMember(this)">Delete</button>
+    `;
+    
+    container.appendChild(newEntry);
+}
 
-  reasonSelect.addEventListener('change', function() {
-    if (this.value === 'other') {
-      otherInputContainer.style.display = 'block';
-    } else {
-      otherInputContainer.style.display = 'none';
-    }
-  });
-});
+function removeMember(button) {
+    button.parentElement.remove();
+}

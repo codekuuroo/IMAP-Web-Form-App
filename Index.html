@@ -74,8 +74,12 @@
             <input type="text" id="job" required><br>
 
             <label for="salary">Salary:</label><br>
-            <input type="number"  id="salary" required>
-        </form>
+            <input type="number" min="0" id="salary" required><br>
+
+            <label for="relative">Household Family Composition:</label>
+            <div id="members-container">
+            <button type="button" onclick="addMember()">+ Add Member</button>
+            </div>
     </div>
 
     <script src="main.js"></script>
