@@ -5,11 +5,11 @@ function addMember() {
     newEntry.className = 'member-entry';
     
     newEntry.innerHTML = `
-        <input type="text" name="relativeName" placeholder="relative Name" required>
+        <input type="text" name="relativeName[]" placeholder="relative Name" required>
 
-        <input type="text" name="relativeAge" placeholder="Age" required>
+        <input type="number" name="relativeAge[]" placeholder="Age" required>
 
-        <select name="relCivStats" required>
+        <select name="relCivStats[]" required>
             <option value="" disabled selected hidden>
                 Civil Status
             </option>
@@ -27,11 +27,11 @@ function addMember() {
             </option>
         </select>
 
-        <input type="text" name="relPatient" placeholder="Relation to Patient" required>
+        <input type="text" name="relPatient[]" placeholder="Relation to Patient" required>
 
-        <input type="text" name="relJob" placeholder="Job" required>
+        <input type="text" name="relJob[]" placeholder="Job" required>
 
-        <input type="number" name="relIncome" min="0" placeholder="Monthly Income" required>
+        <input type="number" name="relIncome[]" min="0" placeholder="Monthly Income" required>
 
         <button type="button" class="remove-btn" onclick="removeMember(this)">Delete</button>
     `;

@@ -5,6 +5,9 @@
 
         <h3>INDIVIDUAL MEDICAL ASSISTANCE PROGRAM (IMAP)</h3>
         <form action="connect.php" method="post">
+            <label for="PatientID">ID NUMBER:</label><br>
+            <input type="text" id="PatientID" name="PatientID" style="text-transform: uppercase;" maxlength="6" placeholder="Enter 6-character ID number" required><br>
+
             <label for="Pname">FULL NAME OF PATIENT:</label><br>
             <input type="text" id="Pname" name="Pname" required><br>
 
@@ -43,7 +46,7 @@
             <label for="female">Female</label><br>
 
             <label for="religion">Religion:</label><br>
-            <input type="text" id="religion"><br>
+            <input type="text" id="religion" name="religion"><br>
 
             <label for="education">Educational Attainment:</label><br>
             <select id="education" name="education" required>
