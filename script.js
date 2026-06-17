@@ -1,10 +1,7 @@
-/**
- * PCSO Medical Assistance Portal - Frontend Script
- */
-
 let relativeCount = 0;
 
-// Switches between the landing page, the form, and the success page
+document.getElementById('Bdate').max = new Date().toISOString().split("T")[0];
+
 function switchView(viewId) {
   document.querySelectorAll('.view-container').forEach(view => {
     view.classList.remove('active');
@@ -26,107 +23,121 @@ function switchView(viewId) {
   window.scrollTo(0, 0);
 }
 
-// Generates and adds a new relative form block into the page
+// 1. Handle Registration
+document.getElementById('registerForm').addEventListener('submit', function(e) {
+  e.preventDefault();
+  const formData = new FormData(this);
+
+  fetch('register.php', { method: 'POST', body: formData })
+  .then(res => { if (!res.ok) return res.text().then(t => { throw new Error(t) }); return res.text(); })
+  .then(data => {
+    if(data.startsWith("SUCCESS:")) {
+      const generatedID = data.split(":")[1];
+      alert(`You can now log in.`);
+      this.reset();
+      document.getElementById('relatives-dynamic-container').innerHTML = '';
+      relativeCount = 0;
+      switchView('view-login');
+    }
+  })
+  .catch(err => alert("Registration Error: " + err.message));
+});
+
+// 2. Handle Login
+document.getElementById('loginForm').addEventListener('submit', function(e) {
+  e.preventDefault();
+  const formData = new FormData(this);
+
+  fetch('login.php', { method: 'POST', body: formData })
+  .then(res => { if (!res.ok) return res.text().then(t => { throw new Error(t) }); return res.text(); })
+  .then(data => {
+    if(data.startsWith("SUCCESS|")) {
+      const patientID = data.split("|")[1];
+      this.reset();
+      document.getElementById('welcome-message').innerText = "Patient ID: " + patientID;
+      switchView('view-landing');
+    }
+  })
+  .catch(err => alert("Login Error: " + err.message));
+});
+
+// 3. Handle Form Submission
+document.getElementById('assistanceRequestForm').addEventListener('submit', function(e) {
+  e.preventDefault();
+  const formData = new FormData(this);
+
+  fetch('connect.php', { method: 'POST', body: formData })
+  .then(res => { if (!res.ok) return res.text().then(t => { throw new Error(t) }); return res.text(); })
+  .then(data => {
+    this.reset();
+    document.getElementById('requestDetails').style.display = 'none';
+    switchView('view-submitted');
+  })
+  .catch(err => alert("Submission Error: " + err.message));
+});
+
+// 4. Logout User
+function logoutUser() {
+  fetch('logout.php')
+  .then(() => {
+    document.getElementById('assistanceRequestForm').reset();
+    switchView('view-login');
+  });
+}
+
+// UI Helpers
 function addNewRelativeEntry() {
   relativeCount++;
   const container = document.getElementById('relatives-dynamic-container');
-  
   const entryHtml = `
-    <div class="relative-entry-card" id="relative-entry-${relativeCount}">
-      <div class="entry-card-header">
-        <h4>Relative Entry #${relativeCount}</h4>
-        <button type="button" class="btn-remove-entry" onclick="removeRelativeEntry(${relativeCount})">✕ Remove</button>
+    <div class="relative-entry-card" id="relative-entry-${relativeCount}" style="background:#f8f9fa; padding:15px; margin-bottom:15px; border-radius:5px; border:1px solid #ddd;">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
+        <h4 style="margin:0;">Relative Entry #${relativeCount}</h4>
+        <button type="button" class="btn btn-secondary" style="padding:5px 10px; font-size:12px;" onclick="removeRelativeEntry(${relativeCount})">✕ Remove</button>
       </div>
       <div class="form-group">
-        <label>Full Name of Relative</label>
-        <input type="text" class="form-control r-name" name="relativeName[]" placeholder="e.g. Juan E. Dela Cruz" required>
+        <label for="relativeName-${relativeCount}">Full Name</label>
+        <input type="text" class="form-control" id="relativeName-${relativeCount}" name="relativeName[]" required>
       </div>
       <div class="form-group">
-        <label>Age</label>
-        <input type="number" class="form-control r-age" name="relativeAge[]" min="18" placeholder="e.g. 35" required>
+        <label for="relativeAge-${relativeCount}">Age</label>
+        <input type="number" class="form-control" id="relativeAge-${relativeCount}" name="relativeAge[]" min='18' required>
       </div>
       <div class="form-group">
-        <label>Civil Status</label>
-        <select class="form-control r-status" name="relCivStats[]" required>
-          <option value="" disabled hidden selected>Select Civil Status</option>
+        <label for="relativeCivStats-${relativeCount}">Civil Status</label>
+        <select id="relativeCivStats-${relativeCount}" name="CivStats[]" class="form-control" required>
+          <option value="" disabled hidden selected>Select Status</option>
           <option value="Single">Single</option>
-          <option value="Widow">Widow</option>
           <option value="Married">Married</option>
+          <option value="Widow">Widow</option>
           <option value="Separated">Separated</option>
-          <option value="With Common Law Partner">With Common Law Partner</option>
+          <option value="Common-Law Partner">Common-Law Partner</option>
         </select>
       </div>
       <div class="form-group">
-        <label>Relation To Patient</label>
-        <input type="text" class="form-control r-relation" name="relPatient[]" placeholder="e.g. Mother" required>
+        <label for="relativeRelation-${relativeCount}">Relation To Patient</label>
+        <input type="text" class="form-control" id="relativeRelation-${relativeCount}" name="relPatient[]" required>
       </div>
       <div class="form-group">
-        <label>Job</label>
-        <input type="text" class="form-control r-job" name="relJob[]" placeholder="e.g. Call Center Agent" required>
+        <label for="relativeJob-${relativeCount}">Job</label>
+        <input type="text" class="form-control" id="relativeJob-${relativeCount}" name="relJob[]" required>
       </div>
       <div class="form-group">
-        <label>Monthly Income</label>
-        <input type="number" class="form-control r-income" name="relIncome[]" min="0" placeholder="e.g. 25000" required>
+        <label for="relativeIncome-${relativeCount}">Monthly Income</label>
+        <input type="number" class="form-control" id="relativeIncome-${relativeCount}" name="relIncome[]" required>
       </div>
-    </div>
-  `;
+    </div>`;
   container.insertAdjacentHTML('beforeend', entryHtml);
 }
 
-// Removes a specific relative block from the page
 function removeRelativeEntry(id) {
   const target = document.getElementById(`relative-entry-${id}`);
-  if (target) {
-    target.remove();
-  }
+  if (target) target.remove();
 }
 
-// Handles the main form submission to PHP
-document.getElementById('masterApplicationForm').addEventListener('submit', function(e) {
-  e.preventDefault(); 
-
-  const formData = new FormData(this);
-
-  fetch('connect.php', {
-    method: 'POST',
-    body: formData
-  })
-  .then(response => {
-    if (!response.ok) {
-        return response.text().then(text => { throw new Error(text) });
-    }
-    return response.text();
-  })
-  .then(responseText => {
-    console.log("Server Response:", responseText);
-    switchView('view-submitted');
-  })
-  .catch(error => {
-    console.error('Submission failed:', error.message);
-    alert('An error occurred:\n' + error.message);
-  });
-});
-
-// Toggles the "Other" input box for specific assistance types
 function toggleRequestDetails() {
     const requestType = document.getElementById('request').value;
     const detailsDiv = document.getElementById('requestDetails');
-
-    if (['others', 'medicine', 'laboratory', 'transplant'].includes(requestType)) {
-        detailsDiv.style.display = 'block';
-    } else {
-        detailsDiv.style.display = 'none';
-    }
+    detailsDiv.style.display = (requestType === 'others') ? 'block' : 'none';
 }
 
-// Wipes the form inputs and dynamic relative blocks to start a new entry
-function resetPortal() {
-  document.getElementById('masterApplicationForm').reset();
-  document.getElementById('relatives-dynamic-container').innerHTML = '';
-  relativeCount = 0;
-  switchView('view-landing');
-}
-
-window.addEventListener('DOMContentLoaded', () => {
-  switchView('view-landing');
-});
