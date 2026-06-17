@@ -37,7 +37,7 @@ if ($conn->connect_error) {
 }
 
 // Check Username uniqueness
-$checkUser = $conn->prepare("SELECT Patient_ID FROM users WHERE username = ?");
+$checkUser = $conn->prepare("SELECT Patient_ID FROM account_information WHERE username = ?");
 $checkUser->bind_param("s", $user);
 $checkUser->execute();
 $checkUser->store_result();
@@ -52,7 +52,7 @@ $isUnique = false;
 $PatientID = "";
 while (!$isUnique) {
     $PatientID = "PC" . strtoupper(substr(md5(uniqid(mt_rand(), true)), 0, 4));
-    $checkID = $conn->prepare("SELECT Patient_ID FROM users WHERE Patient_ID = ?");
+    $checkID = $conn->prepare("SELECT Patient_ID FROM application_information WHERE Patient_ID = ?");
     $checkID->bind_param("s", $PatientID);
     $checkID->execute();
     $checkID->store_result();
@@ -65,7 +65,7 @@ $conn->begin_transaction();
 try {
     // 1. Insert User Account
     $hashed_password = password_hash($pass, PASSWORD_DEFAULT);
-    $stmtUser = $conn->prepare("INSERT INTO users (Patient_ID, username, password) VALUES (?, ?, ?)");
+    $stmtUser = $conn->prepare("INSERT INTO account_information (Patient_ID, username, password) VALUES (?, ?, ?)");
     $stmtUser->bind_param("sss", $PatientID, $user, $hashed_password);
     $stmtUser->execute();
     $stmtUser->close();

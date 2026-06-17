@@ -69,9 +69,15 @@ document.getElementById('assistanceRequestForm').addEventListener('submit', func
   fetch('connect.php', { method: 'POST', body: formData })
   .then(res => { if (!res.ok) return res.text().then(t => { throw new Error(t) }); return res.text(); })
   .then(data => {
-    this.reset();
-    document.getElementById('requestDetails').style.display = 'none';
-    switchView('view-submitted');
+    console.log("Server response:", data);
+
+    if (data.trim() === "SUCCESS") {
+        this.reset();
+        document.getElementById('requestDetails').style.display = 'none';
+        switchView('view-submitted');
+    } else {
+        alert(data);
+    }
   })
   .catch(err => alert("Submission Error: " + err.message));
 });
@@ -92,7 +98,6 @@ function addNewRelativeEntry() {
   const entryHtml = `
     <div class="relative-entry-card" id="relative-entry-${relativeCount}" style="background:#f8f9fa; padding:15px; margin-bottom:15px; border-radius:5px; border:1px solid #ddd;">
       <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
-        <h4 style="margin:0;">Relative Entry #${relativeCount}</h4>
         <button type="button" class="btn btn-secondary" style="padding:5px 10px; font-size:12px;" onclick="removeRelativeEntry(${relativeCount})">✕ Remove</button>
       </div>
       <div class="form-group">

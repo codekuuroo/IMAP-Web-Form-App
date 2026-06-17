@@ -11,7 +11,7 @@ if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
 
-$stmt = $conn->prepare("SELECT Patient_ID, password FROM users WHERE username = ?");
+$stmt = $conn->prepare("SELECT Patient_ID, password FROM account_information WHERE username = ?");
 $stmt->bind_param("s", $user);
 $stmt->execute();
 $stmt->store_result();
