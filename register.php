@@ -19,7 +19,7 @@ $philhealth = filter_input(INPUT_POST, 'philhealth', FILTER_SANITIZE_FULL_SPECIA
 // Relatives Arrays (from your dynamic JS cards)
 $relName = $_POST['relativeName'] ?? [];
 $relAge = $_POST['relativeAge'] ?? [];
-$relCivStats = $_POST['CivStats'] ?? []; // Fixed to match the name="CivStats[]" in your relative HTML
+$relCivStats = $_POST['relCivStats'] ?? []; // Fixed to match the name="relCivStats[]" in your relative HTML
 $relPatient = $_POST['relPatient'] ?? [];
 $relJob = $_POST['relJob'] ?? [];
 $relIncome = $_POST['relIncome'] ?? [];
@@ -77,6 +77,7 @@ try {
 
     // 3. Insert Relative Data (if any were added)
     if (is_array($relName) && count($relName) > 0) {
+
         $stmtRel = $conn->prepare("INSERT INTO relative_information (Patient_ID, Relative_Name, Relative_Age, Relative_CivilStatus, Relative_RelationToPatient, Relative_Job, Relative_MonthlyIncome) VALUES (?, ?, ?, ?, ?, ?, ?)");
         for ($i = 0; $i < count($relName); $i++) {
             if (empty($relName[$i])) continue;

@@ -34,7 +34,7 @@
   </div>
 
   <div id="view-register" class="view-container">
-    <div class="form-wrapper"">
+    <div class="form-wrapper">
       <h1 class="form-main-title">Register Patient Account</h1>
       <form id="registerForm">
         
@@ -55,16 +55,15 @@
 
         <div class="form-section-block">
           <h2 class="form-subtitle">Patient Profile Data</h2>
-          <p style="font-size:12px; color:gray; margin-bottom:15px;">*Your unique Patient ID will be automatically generated upon submission.</p>
           
           <div class="form-group">
             <label for="Pname">Full Name</label>
-            <input type="text" id="Pname" name="Pname" class="form-control" required>
+            <input type="text" id="Pname" name="Pname" class="form-control" placeholder="e.g. Juan F. Dela Cruz" required>
           </div>
           
           <div class="form-group">
             <label for="Addr">Full Address</label>
-            <input type="text" id="Addr" name="Addr" class="form-control" required>
+            <input type="text" id="Addr" name="Addr" class="form-control" placeholder="e.g. Quezon City" required>
           </div>
           
           <div class="form-group">
@@ -94,7 +93,7 @@
           
           <div class="form-group">
             <label for="religion">Religion</label>
-            <input type="text" id="religion" name="religion" class="form-control">
+            <input type="text" id="religion" name="religion" placeholder="e.g. Roman Catholic" class="form-control">
           </div>
           
           <div class="form-group">
@@ -112,12 +111,12 @@
           
           <div class="form-group">
             <label for="job">Job</label>
-            <input type="text" id="job" name="job" class="form-control" required>
+            <input type="text" id="job" name="job" class="form-control" placeholder="e.g. Construction Worker, Unemployed" required>
           </div>
           
           <div class="form-group">
             <label for="salary">Monthly Income</label>
-            <input type="number" id="salary" name="salary" class="form-control" required>
+            <input type="number" id="salary" name="salary" class="form-control" placeholder="e.g. 15000" required>
           </div>
           
           <div class="form-group">
@@ -156,16 +155,25 @@
       <form id="assistanceRequestForm">
         <div class="form-group">
           <label for="diagnosis">Patient Diagnosis</label>
-          <input type="text" id="diagnosis" name="diagnosis" class="form-control" placeholder="e.g. Chronic Kidney Disease" required>
+          <input type="text" id="diagnosis" name="diagnosis" class="form-control" placeholder="e.g. Osteoarthritis" required>
         </div>
         <div class="form-group">
           <label for="request">Nature of Requested Assistance</label>
           <select id="request" class="form-control" name="request" onchange="toggleRequestDetails()" required>
-              <option value="" disabled hidden selected>Select an option...</option>
-              <option value="dialysis">Dialysis</option>
-              <option value="chemotherapy">Chemotherapy</option>
-              <option value="medicine">Medicine</option>
-              <option value="others">Others</option>
+            <option value="" disabled hidden selected>Select an option...</option>
+            <option value="Confinement">Confinement</option>
+            <option value="Dialysis">Dialysis</option>
+            <option value="Chemotherapy">Chemotherapy</option>
+            <option value="Medicine">Medicine</option>
+            <option value="Surgical Supplies">Surgical Supplies</option>
+            <option value="Implant">Implant</option>
+            <option value="Laboratory/Diagnostic Procedures">Laboratory/Diagnostic Procedures</option>
+            <option value="Medical Devices">Medical Devices</option>
+            <option value="Assistive Devices">Assistive Devices</option>
+            <option value="Non & Minimally Invasive Procedures">Non & Minimally Invasive Procedures</option>
+            <option value="Transplant">Transplant</option>
+            <option value="Rehabilitative Therapy">Rehabilitative Therapy</option>
+            <option value="Others">Others</option>
           </select>
         </div>
         <div class="form-group" id="requestDetails" style="display: none;">

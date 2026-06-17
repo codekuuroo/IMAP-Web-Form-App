@@ -12,7 +12,7 @@ function switchView(viewId) {
     targetView.classList.add('active');
   }
 
-  if (viewId === 'view-landing') {
+  if (viewId === 'view-login') {
     document.body.className = 'landing-bg';
   } else if (viewId === 'view-submitted') {
     document.body.className = 'success-bg';
@@ -96,16 +96,16 @@ function addNewRelativeEntry() {
         <button type="button" class="btn btn-secondary" style="padding:5px 10px; font-size:12px;" onclick="removeRelativeEntry(${relativeCount})">✕ Remove</button>
       </div>
       <div class="form-group">
-        <label for="relativeName-${relativeCount}">Full Name</label>
-        <input type="text" class="form-control" id="relativeName-${relativeCount}" name="relativeName[]" required>
+        <label for="relativeName">Full Name</label>
+        <input type="text" class="form-control" id="relativeName" name="relativeName[]" required>
       </div>
       <div class="form-group">
-        <label for="relativeAge-${relativeCount}">Age</label>
-        <input type="number" class="form-control" id="relativeAge-${relativeCount}" name="relativeAge[]" min='18' required>
+        <label for="relativeAge">Age</label>
+        <input type="number" class="form-control" id="relativeAge" name="relativeAge[]" min='18' required>
       </div>
       <div class="form-group">
-        <label for="relativeCivStats-${relativeCount}">Civil Status</label>
-        <select id="relativeCivStats-${relativeCount}" name="CivStats[]" class="form-control" required>
+        <label for="relativeCivStats">Civil Status</label>
+        <select id="relativeCivStats" name="relCivStats[]" class="form-control" required>
           <option value="" disabled hidden selected>Select Status</option>
           <option value="Single">Single</option>
           <option value="Married">Married</option>
@@ -138,6 +138,10 @@ function removeRelativeEntry(id) {
 function toggleRequestDetails() {
     const requestType = document.getElementById('request').value;
     const detailsDiv = document.getElementById('requestDetails');
-    detailsDiv.style.display = (requestType === 'others') ? 'block' : 'none';
+    if (['Others', 'Medicine', 'Laboratory/Diagnostic Procedures', 'Transplant'].includes(requestType)) {
+        detailsDiv.style.display = 'block';
+    } else {
+        detailsDiv.style.display = 'none';
+    }
 }
 
