@@ -30,54 +30,63 @@ $dbname = "IMAP_Form";
 $conn = new mysqli($host, $dbusername, $dbpassword, $dbname);
 
 if ($conn->connect_error) {
-    die('Connect Error ('. $conn->connect_errno .') '.$conn->connect_error);
-} else {
-    $stmt1 = $conn->prepare("INSERT INTO patient_information (Patient_ID, patient_Name, patient_Address, patient_CivilStatus, patient_BirthDate, patient_Sex, patient_Religion, patient_EducationalAttainment, patient_Job, patient_MonthlyIncome, philhealth_MembershipStatus) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
-    $stmt2 = $conn->prepare("INSERT INTO relative_information (Patient_ID, Relative_Name, Relative_Age, Relative_CivilStatus, Relative_RelationToPatient, Relative_Job, Relative_MonthlyIncome) VALUES (?, ?, ?, ?, ?, ?, ?)");
-    $stmt3 = $conn->prepare("INSERT INTO application_information (Patient_ID, Patient_Diagnosis, Patient_NatureOfRequest) VALUES (?, ?, ?)");
-    
-    if($stmt1 === false) {
-        die('Prepare Error: ' . $conn->error);
-    }
-
-    $stmt1->bind_param("sssssssssis", $PatientID, $Pname, $Addr, $CivStats, $Bday, $sex, $religion, $education, $job, $salary, $philhealth);
-    
-    if ($stmt1->execute()) {
-        echo "Patient record inserted successfully.<br>";
-        
-        if (is_array($relName)) {
-            for ($i = 0; $i < count($relName); $i++) {
-                $stmt2->bind_param("ssisssi", $PatientID, $relName[$i], $relAge[$i], $relCivStats[$i], $relPatient[$i], $relJob[$i], $relIncome[$i]);
-                if (!$stmt2->execute()) {
-                    echo "Error inserting relative: " . $stmt2->error . "<br>";
-                    break;
-                }
-            }
-        }
-
-        if ($stmt3) {
-            $stmt3->bind_param("sss", $PatientID, $diagnosis, $natureOfRequest);
-            if (!$stmt3->execute()) {
-                echo "Error inserting application information: " . $stmt3->error . "<br>";
-            }
-        } else {
-            echo "Error preparing application information statement: " . $conn->error . "<br>";
-        }
-    } else {
-        echo "Error inserting patient: " . $stmt1->error;
-    }
-
-    
-
-    if ($stmt1) {
-        $stmt1->close();
-    }
-    if ($stmt2) {
-        $stmt2->close();
-    }
-    if ($stmt3) {
-        $stmt3->close();
-    }
-    $conn->close();
+    // Send a 500 error code so JS catch block receives the actual error text
+    http_response_code(500);
+    die('Database Connection Error: '. $conn->connect_error);
 }
+
+// 1. Prepare statements
+$stmt1 = $conn->prepare("INSERT INTO patient_information (Patient_ID, patient_Name, patient_Address, patient_CivilStatus, patient_BirthDate, patient_Sex, patient_Religion, patient_EducationalAttainment, patient_Job, patient_MonthlyIncome, philhealth_MembershipStatus) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+$stmt2 = $conn->prepare("INSERT INTO relative_information (Patient_ID, Relative_Name, Relative_Age, Relative_CivilStatus, Relative_RelationToPatient, Relative_Job, Relative_MonthlyIncome) VALUES (?, ?, ?, ?, ?, ?, ?)");
+$stmt3 = $conn->prepare("INSERT INTO application_information (Patient_ID, Patient_Diagnosis, Patient_NatureOfRequest) VALUES (?, ?, ?)");
+
+// 2. Strict verification check on ALL prepared statements
+if ($stmt1 === false || $stmt2 === false || $stmt3 === false) {
+    http_response_code(500);
+    die('SQL Prepare Error. Check if table/column names match exactly! MySQL Error: ' . $conn->error);
+}
+
+// 3. Bind and execute Patient Info
+$stmt1->bind_param("sssssssssis", $PatientID, $Pname, $Addr, $CivStats, $Bday, $sex, $religion, $education, $job, $salary, $philhealth);
+
+if ($stmt1->execute()) {
+    $relativeErrors = false;
+    
+    if (is_array($relName) && count($relName) > 0) {
+        for ($i = 0; $i < count($relName); $i++) {
+            // Ensure inputs exist at index to avoid undefined index notices
+            $rName   = $relName[$i] ?? '';
+            $rAge    = intval($relAge[$i] ?? 0);
+            $rCiv    = $relCivStats[$i] ?? '';
+            $rPat    = $relPatient[$i] ?? '';
+            $rJob    = $relJob[$i] ?? '';
+            $rSalary = intval($relIncome[$i] ?? 0);
+
+            $stmt2->bind_param("ssisssi", $PatientID, $rName, $rAge, $rCiv, $rPat, $rJob, $rSalary);
+            if (!$stmt2->execute()) {
+                $relativeErrors = true;
+                break;
+            }
+        }
+    }
+
+    // 4. Execute Application Info
+    $stmt3->bind_param("sss", $PatientID, $diagnosis, $natureOfRequest);
+    $stmt3->execute();
+
+    if (!$relativeErrors) {
+        echo "SUCCESS";
+    } else {
+        echo "PARTIAL_FAILURE_ON_RELATIVES";
+    }
+} else {
+    http_response_code(500);
+    echo "DATABASE_WRITE_ERROR: " . $stmt1->error;
+}
+
+// Close connections safely
+$stmt1->close();
+$stmt2->close();
+$stmt3->close();
+$conn->close();
 ?>
