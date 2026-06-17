@@ -19,10 +19,11 @@ $philhealth = filter_input(INPUT_POST, 'philhealth', FILTER_SANITIZE_FULL_SPECIA
 // Relatives Arrays (from your dynamic JS cards)
 $relName = $_POST['relativeName'] ?? [];
 $relAge = $_POST['relativeAge'] ?? [];
-$relCivStats = $_POST['relCivStats'] ?? []; // Fixed to match the name="relCivStats[]" in your relative HTML
+$relCivStats = $_POST['relCivilStatus'] ?? []; 
 $relPatient = $_POST['relPatient'] ?? [];
 $relJob = $_POST['relJob'] ?? [];
 $relIncome = $_POST['relIncome'] ?? [];
+
 
 if (empty($user) || empty($pass) || empty($Pname)) {
     http_response_code(400);

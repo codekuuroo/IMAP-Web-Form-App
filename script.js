@@ -105,7 +105,7 @@ function addNewRelativeEntry() {
       </div>
       <div class="form-group">
         <label for="relativeCivStats">Civil Status</label>
-        <select id="relativeCivStats" name="relCivStats[]" class="form-control" required>
+        <select id="relativeCivStats" name="relCivilStatus[]" class="form-control" required>
           <option value="" disabled hidden selected>Select Status</option>
           <option value="Single">Single</option>
           <option value="Married">Married</option>
